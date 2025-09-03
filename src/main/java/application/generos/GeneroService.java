@@ -16,9 +16,10 @@ public class GeneroService {
         return generoRepo.findAll().stream().map(GeneroDTO::new).toList();
     }
 
-    public GeneroDTO insert(GeneroDTO novoGenero){
+    public GeneroDTO insert(GeneroinsertDTO novoGenero){
         return new GeneroDTO(generoRepo.save(new Genero(novoGenero)));
     }
+
     public GeneroDTO getOne(long id) {
         Optional<Genero> resultado = generoRepo.findById(id);
         if(resultado.isEmpty()){
@@ -29,4 +30,19 @@ public class GeneroService {
         return new GeneroDTO(resultado.get());
 
     }
+
+    public GeneroDTO update(long id, GeneroDTO novosDados) {
+        Optional <Genero> resultado = generoRepo.findById(id);
+
+        if(resultado.isEmpty()){
+            throw new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Genero não encontrada"
+            );
+        }
+        
+        resultado.get().setNome(novosDados.nome());
+        
+        return new GeneroDTO(generoRepo.save (resultado.get()));
+    }
+
 }
